@@ -14,17 +14,17 @@ public class Player extends Entity{
 	GamePanel gp;
 	KeyHandler keyH;
 	
-	public Player(GamePanel gp, KeyHandler keyH) {
+	public Player(GamePanel gp, KeyHandler keyH, int x, int y) {
 		this.gp = gp;
 		this.keyH = keyH;
 		
-		setDefaultValues();
+		setDefaultValues(x, y);
 		getPlayerImage();
 	}
 	
-	public void setDefaultValues() {
-		x = 100;
-		y = 100;
+	public void setDefaultValues(int X, int Y) {
+		x = X;
+		y = Y;
 		speed = 4;
 	}
 	
@@ -44,12 +44,6 @@ public class Player extends Entity{
 		}
 		else if(keyH.downPressed == true) {
 			y += speed;
-		}
-		else if(keyH.leftPressed == true) {
-			x -= speed;
-		}
-		else if(keyH.rightPressed == true) {
-			x += speed;
 		}
 	}
 	public void draw(Graphics2D g2) {

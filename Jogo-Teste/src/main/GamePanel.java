@@ -28,13 +28,8 @@ public class GamePanel extends JPanel implements Runnable{
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
-	Player player = new Player(this, keyH);
-	
-	
-	// Define a posicao inicial do jogador
-	int playerX = 100;
-	int playerY = 100;
-	int playerSpeed = 4;
+	Player player = new Player(this, keyH, 100, 570);
+//	Player player2 = new Player(this, keyH, 700, 500);
 	
 	
 	public GamePanel() {
@@ -84,6 +79,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public void update() {
 		player.update();
+//		player2.update();
 	}
 	
 	public void paintComponent(Graphics g) { // graphics é uma classe que implementa varias formas de desenhar objetos na tela.
@@ -93,6 +89,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		tileM.draw(g2);
 		player.draw(g2);
+//		player2.draw(g2);
 		
 		g2.dispose(); // descarta este contexto gráfico e libera quisquer recursos do sistema que estao usando ele.
 		
