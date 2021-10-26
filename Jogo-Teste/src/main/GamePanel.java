@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Carro;
 import entity.Player;
 import tile.TileManager;
 
@@ -19,24 +20,27 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int tileSize = originalTileSize*scale; // 48x48 scale
 	public final int maxScreenCol = 20;
 	public final int maxScreenRow = 14;
-	public final int screenWidth = tileSize*maxScreenCol; // 768 pixels
-	public final int screenHeight = tileSize*maxScreenRow; // 576 pixels
+	public final int screenWidth = tileSize*maxScreenCol; // 960 pixels
+	public final int screenHeight = tileSize*maxScreenRow; // 672 pixels
 	
 	// FPS
 	int FPS = 60;
 	
 	TileManager tileM = new TileManager(this);
-	KeyHandler keyH = new KeyHandler();
+	KeyHandler keyH_arrow = new KeyHandler(true);
+	KeyHandler keyH_ws = new KeyHandler(false);
 	Thread gameThread;
-	Player player = new Player(this, keyH, 100, 570);
-//	Player player2 = new Player(this, keyH, 700, 500);
+	Player player1 = new Player(this, keyH_ws, 200, 570);
+ 	Player player2 = new Player(this, keyH_arrow, 700, 570);
+ 	Carro car1 = new Carro(this, 2, 0);
 	
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
-		this.addKeyListener(keyH); // Event listener (Parece com Javascript +/-)
+		this.addKeyListener(keyH_arrow); // Event listener (Parece com Javascript +/-)
+		this.addKeyListener(keyH_ws);
 		this.setFocusable(true); // com isso o painel do jogo vai estar focado para receber inputs de teclado
 	}
 	
@@ -78,8 +82,9 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void update() {
-		player.update();
-//		player2.update();
+		player1.update();
+		player2.update();
+		car1.update();
 	}
 	
 	public void paintComponent(Graphics g) { // graphics é uma classe que implementa varias formas de desenhar objetos na tela.
@@ -88,8 +93,9 @@ public class GamePanel extends JPanel implements Runnable{
 		Graphics2D g2 = (Graphics2D)g;
 		
 		tileM.draw(g2);
-		player.draw(g2);
-//		player2.draw(g2);
+		player1.draw(g2);
+		player2.draw(g2);
+		car1.draw(g2);
 		
 		g2.dispose(); // descarta este contexto gráfico e libera quisquer recursos do sistema que estao usando ele.
 		
