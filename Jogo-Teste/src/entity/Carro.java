@@ -37,7 +37,7 @@ public class Carro extends Entity{
 	}
 	
 	public void setSpeed() {
-		int Speeds[] = {1, 3, 4, 6, 9};
+		int Speeds[] = {1, 2, 4, 6, 8};
 		
 		speed = Speeds[RelPosition];
 	}
@@ -54,6 +54,7 @@ public class Carro extends Entity{
 			x = 936;
 			y = (AbsPosition+2)*48;
 		}
+		gp.matriz[x][y] = 1;
 	}
 	
 	public void getPlayerImage() {
@@ -79,7 +80,11 @@ public class Carro extends Entity{
 	}
 	
 	public void update() {
-		x = (direction == 0) ? x + speed : x - speed;
+		int newPos = (direction == 0) ? x + speed : x - speed;
+		
+		gp.matriz[x][y] = 0;
+		x = newPos;
+		gp.matriz[x][y] = 1;
 	}
 	
 	public void draw(Graphics2D g2) {

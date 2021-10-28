@@ -23,6 +23,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int screenWidth = tileSize*maxScreenCol; // 960 pixels
 	public final int screenHeight = tileSize*maxScreenRow; // 672 pixels
 	
+	public int matriz[][] = new int[672][960];
+	
 	// FPS
 	int FPS = 60;
 	
@@ -42,6 +44,16 @@ public class GamePanel extends JPanel implements Runnable{
 		this.addKeyListener(keyH_arrow); // Event listener (Parece com Javascript +/-)
 		this.addKeyListener(keyH_ws);
 		this.setFocusable(true); // com isso o painel do jogo vai estar focado para receber inputs de teclado
+		
+		IniciaMatriz();
+	}
+	
+	public void IniciaMatriz() {
+		for (int i = 0; i < 672; i++) {
+			for (int j = 0; j < 960; j++) {
+				matriz[i][j] = 0;
+			}
+		}
 	}
 	
 	public void startGameThread() {
