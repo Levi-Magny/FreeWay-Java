@@ -1,8 +1,11 @@
 package main;
 
 public class ControlStreets {
-	
-	public ControlStreets(int street) {
+
+	public ControlStreets() {
 		
 	}
 }
+
+
+//Carro car1 = new Carro(this, 2, 0);
