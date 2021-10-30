@@ -24,6 +24,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int screenHeight = tileSize*maxScreenRow; // 672 pixels
 	
 	public int matriz[][] = new int[672][960];
+	public int colision = 0;
 	
 	// FPS
 	int FPS = 60;
@@ -32,8 +33,10 @@ public class GamePanel extends JPanel implements Runnable{
 	KeyHandler keyH_arrow = new KeyHandler(true);
 	KeyHandler keyH_ws = new KeyHandler(false);
 	Thread gameThread;
-	Player player1 = new Player(this, keyH_ws, 200, 570);
- 	Player player2 = new Player(this, keyH_arrow, 700, 570);
+	Player player1 = new Player(this, keyH_ws, 200, 570, 1);
+ 	Player player2 = new Player(this, keyH_arrow, 670, 570, 2);
+ 	
+ 	Carro carro1 = new Carro(this, 1, 0);
 	
 	
 	public GamePanel() {
@@ -73,6 +76,8 @@ public class GamePanel extends JPanel implements Runnable{
 			// 2 DRAW: Desenhar a tela com as informacoes atualizadas.
 			repaint();
 			
+			verificaColisao();
+			
 			try {
 				double remainingTime = nextDrawTime - System.nanoTime();
 				remainingTime /= 1000000;
@@ -92,9 +97,30 @@ public class GamePanel extends JPanel implements Runnable{
 		
 	}
 	
+	public void verificaColisao() {
+		
+		//inicia mutex
+		
+
+		if(colision == 1) {
+			player1.posicaoInicial();
+		} else if(colision == 2) {
+			player2.posicaoInicial();
+		}
+		
+		colision = 0;
+		
+		repaint();
+		
+		System.out.println("Colisao no player " + colision);
+		
+		//libera mutex
+	}
+	
 	public void update() {
 		player1.update();
 		player2.update();
+		carro1.update();
 	}
 	
 	public void paintComponent(Graphics g) { // graphics é uma classe que implementa varias formas de desenhar objetos na tela.
@@ -105,6 +131,7 @@ public class GamePanel extends JPanel implements Runnable{
 		tileM.draw(g2);
 		player1.draw(g2);
 		player2.draw(g2);
+		carro1.draw(g2);
 		
 		g2.dispose(); // descarta este contexto gráfico e libera quisquer recursos do sistema que estao usando ele.
 		

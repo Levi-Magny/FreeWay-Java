@@ -10,11 +10,14 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 
-public class Carro extends Entity{
+public class Carro extends Entity implements Runnable{
 
 	GamePanel gp;
 	KeyHandler keyH;
+	int posicaoMatriz;
 	int direction, RelPosition, AbsPosition;
+	
+	Thread threadCarro;
 	
 	/**
 	 * 
@@ -34,29 +37,49 @@ public class Carro extends Entity{
 		setSpeed();
 		setDefaultValues();
 		getPlayerImage();
+		startThread();
 	}
 	
+	public void startThread() {
+	    threadCarro = new Thread(this);
+		threadCarro.start();
+	}
+	
+	/**
+	 * Metodo que define a velocidade do carro
+	 */
 	public void setSpeed() {
 		int Speeds[] = {1, 2, 4, 6, 8};
 		
 		speed = Speeds[RelPosition];
 	}
 	
+	/**
+	 * Metodo que define a posicao absoluta do carro
+	 */
 	public void setAbsPos() {
 		AbsPosition = (direction == 0) ? (9-RelPosition) : RelPosition;
 	}
 	
+	/**
+	 * Define a posicao inicial do carro
+	 */
 	public void setDefaultValues() {
 		if(direction == 0) {
+			posicaoMatriz = 0;
 			x = 0;
 			y = (AbsPosition+2)*48;
 		} else {
+			posicaoMatriz = 20;
 			x = 936;
 			y = (AbsPosition+2)*48;
 		}
 		gp.matriz[x][y] = 1;
 	}
 	
+	/**
+	 * Define a aparência do carro
+	 */
 	public void getPlayerImage() {
 		
 		String colors[] = {"Carro01.png", "Carro02.png"};
@@ -79,19 +102,49 @@ public class Carro extends Entity{
 		}
 	}
 	
+	/**
+	 * Atualiza o carro na tela
+	 */
 	public void update() {
 		int newPos = (direction == 0) ? x + speed : x - speed;
 		
-		gp.matriz[x][y] = 0;
 		x = newPos;
-		gp.matriz[x][y] = 1;
 	}
 	
+	/**
+	 * Desenha o carro na tela
+	 * @param g2 Os graficos da janela do jogo.
+	 */
 	public void draw(Graphics2D g2) {
 		//g2.setColor(Color.white);
 		//g2.fillRect(x, y, gp.tileSize, gp.tileSize); // desenhando um retangulo
 		
 		BufferedImage image = look;
 		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+	}
+	
+	
+	
+	
+	@Override
+	public void run() {
+		
+		while(threadCarro != null) {
+			if(x > posicaoMatriz) {
+				atualizaMatriz();
+			}
+		}
+	}
+	
+	public void atualizaMatriz() {
+		
+		//bota mutex
+		gp.matriz[posicaoMatriz][AbsPosition] = 0;
+		AbsPosition++;
+		if(gp.matriz[posicaoMatriz][AbsPosition] != 0) {
+			gp.colision = gp.matriz[posicaoMatriz][AbsPosition];
+		}
+		gp.matriz[posicaoMatriz][AbsPosition] = 3;
+		//tira mutex
 	}
 }

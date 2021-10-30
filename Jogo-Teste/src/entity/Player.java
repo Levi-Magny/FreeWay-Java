@@ -10,22 +10,44 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 
-public class Player extends Entity{
+public class Player extends Entity implements Runnable{
 	GamePanel gp;
 	KeyHandler keyH;
+	int posicaoMatriz;
+	int DefaultX, DefaultY;
+	int NumJogador;
 	
-	public Player(GamePanel gp, KeyHandler keyH, int x, int y) {
+	Thread threadPlayer;
+	
+	public Player(GamePanel gp, KeyHandler keyH, int x, int y, int ij) {
 		this.gp = gp;
 		this.keyH = keyH;
 		
+		this.posicaoMatriz = x; 
+		
+		this.NumJogador = ij;
+		
 		setDefaultValues(x, y);
 		getPlayerImage();
+		
+		startThread();
+	}
+	
+	public void startThread() {
+		threadPlayer = new Thread(this);
+		threadPlayer.start();
 	}
 	
 	public void setDefaultValues(int X, int Y) {
-		x = X;
-		y = Y;
+		
+		x = DefaultX = X;
+		y = DefaultY = Y;
 		speed = 4;
+	}
+	
+	public void posicaoInicial() {
+		x = DefaultX;
+		y = DefaultY;
 	}
 	
 	public void getPlayerImage() {
@@ -53,5 +75,53 @@ public class Player extends Entity{
 		BufferedImage image = look;
 		
 		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+	}
+	
+	
+	
+	
+	
+	@Override
+	public void run() {
+		double drawInterval = 1000000000/60; // 0.01666 segundos
+		double nextDrawTime = System.nanoTime() + drawInterval; // "nanoTime()" retorna o valor atual em nanossegundos.
+		
+		while(threadPlayer != null) {
+			if(y != posicaoMatriz) {
+				atualizaMatriz();
+			}
+			
+			try {
+				double remainingTime = nextDrawTime - System.nanoTime();
+				remainingTime /= 1000000;
+				
+				if(remainingTime < 0) remainingTime = 0;
+				
+				Thread.sleep((long) remainingTime);
+				
+				nextDrawTime += drawInterval;
+				
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+				
+			}
+		}
+	}
+	
+	public void atualizaMatriz() {
+		
+		//bota mutex
+
+		int Y = y;
+		
+		gp.matriz[posicaoMatriz][Y] = 0;
+		Y++;
+		if(gp.matriz[posicaoMatriz][Y] != 0) {
+			gp.colision = gp.matriz[posicaoMatriz][Y];
+		}
+		gp.matriz[posicaoMatriz][Y] = NumJogador;
+		
+		//tira mutex
 	}
 }

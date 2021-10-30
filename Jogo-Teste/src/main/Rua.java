@@ -9,13 +9,17 @@ public class Rua extends Thread {
 	Carro carros_rua[];
 	Thread ruaThread;
 	
-	public Rua(int tamanho) {
-		carros_rua = new Carro[tamanho];
+	public Rua() { // Recebe 'int tamanho'
+		carros_rua = new Carro[1];
 	}
 	
 	public void startRuaThread() {
 		ruaThread = new Thread(this);
 		ruaThread.start();
+	}
+	
+	public void CreateCars() {
+		
 	}
 	
 	@Override
@@ -27,7 +31,7 @@ public class Rua extends Thread {
 		
 	}
 	
-	public void paintCarro(Graphics g) {
+	public void drawCarros(Graphics2D g2) {
 		
 	}
 	
