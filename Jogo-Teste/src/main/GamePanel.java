@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable{
 	Thread gameThread;
 	Player player1 = new Player(this, keyH_ws, 200, 570);
  	Player player2 = new Player(this, keyH_arrow, 700, 570);
+ 	Carro carro = new Carro(this, 1, 0);
 	
 	
 	public GamePanel() {
@@ -95,6 +96,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void update() {
 		player1.update();
 		player2.update();
+		carro.update();
 	}
 	
 	public void paintComponent(Graphics g) { // graphics é uma classe que implementa varias formas de desenhar objetos na tela.
@@ -105,6 +107,7 @@ public class GamePanel extends JPanel implements Runnable{
 		tileM.draw(g2);
 		player1.draw(g2);
 		player2.draw(g2);
+		carro.draw(g2);
 		
 		g2.dispose(); // descarta este contexto gráfico e libera quisquer recursos do sistema que estao usando ele.
 		

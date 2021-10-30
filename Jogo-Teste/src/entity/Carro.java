@@ -10,11 +10,13 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 
-public class Carro extends Entity{
+public class Carro extends Entity implements Runnable{
 
 	GamePanel gp;
 	KeyHandler keyH;
 	int direction, RelPosition, AbsPosition;
+	
+	Thread threadCarro;
 	
 	/**
 	 * 
@@ -34,6 +36,12 @@ public class Carro extends Entity{
 		setSpeed();
 		setDefaultValues();
 		getPlayerImage();
+		startThread();
+	}
+	
+	public void startThread() {
+	    threadCarro = new Thread(this);
+		threadCarro.start();
 	}
 	
 	public void setSpeed() {
@@ -82,9 +90,7 @@ public class Carro extends Entity{
 	public void update() {
 		int newPos = (direction == 0) ? x + speed : x - speed;
 		
-		gp.matriz[x][y] = 0;
 		x = newPos;
-		gp.matriz[x][y] = 1;
 	}
 	
 	public void draw(Graphics2D g2) {
@@ -93,5 +99,15 @@ public class Carro extends Entity{
 		
 		BufferedImage image = look;
 		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+	}
+
+	@Override
+	public void run() {
+		while(threadCarro != null) {
+			//System.out.println("AQUI");
+			if(x > gp.screenWidth) {
+				this.setDefaultValues();
+			}
+		}
 	}
 }
