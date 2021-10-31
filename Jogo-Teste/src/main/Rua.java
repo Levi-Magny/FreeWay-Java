@@ -5,22 +5,13 @@ import java.awt.Graphics2D;
 
 import entity.Carro;
 
-public class Rua extends Thread {
-	Carro carros_rua[];
+public class Rua {
+	//Carro carros_rua[];
+	Carro carro_rua;
 	Thread ruaThread;
 	
-	public Rua(int tamanho) {
-		carros_rua = new Carro[tamanho];
-	}
-	
-	public void startRuaThread() {
-		ruaThread = new Thread(this);
-		ruaThread.start();
-	}
-	
-	@Override
-	public void run() {
-		
+	public Rua() {
+		//carro_rua = new Carro();
 	}
 	
 	public void update() {

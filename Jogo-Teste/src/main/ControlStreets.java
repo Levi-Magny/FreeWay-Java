@@ -6,6 +6,3 @@ public class ControlStreets {
 		
 	}
 }
-
-
-//Carro car1 = new Carro(this, 2, 0);

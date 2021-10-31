@@ -23,7 +23,6 @@ public class Carro extends Entity implements Runnable{
 	 * @param gp GamePanel
 	 * @param x x-axis initial position
 	 * @param y y-axis initial position
-	 * @param speed Speed of the car
 	 * @param direction 0: from left to right; 1: from right to left
 	 */
 	public Carro(GamePanel gp, int position, int direction) {
@@ -36,7 +35,6 @@ public class Carro extends Entity implements Runnable{
 		setSpeed();
 		setDefaultValues();
 		getPlayerImage();
-		startThread();
 	}
 	
 	public void startThread() {
@@ -55,14 +53,12 @@ public class Carro extends Entity implements Runnable{
 	}
 	
 	public void setDefaultValues() {
-		if(direction == 0) {
+		if(direction == 0)
 			x = 0;
-			y = (AbsPosition+2)*48;
-		} else {
-			x = 936;
-			y = (AbsPosition+2)*48;
-		}
-		gp.matriz[x][y] = 1;
+		else
+			x = 912;
+		
+		y = (AbsPosition+2)*48;
 	}
 	
 	public void getPlayerImage() {
@@ -91,23 +87,70 @@ public class Carro extends Entity implements Runnable{
 		int newPos = (direction == 0) ? x + speed : x - speed;
 		
 		x = newPos;
+		
+		if(x > gp.screenWidth || x < 0) {
+			this.setDefaultValues();
+		}
 	}
 	
 	public void draw(Graphics2D g2) {
-		//g2.setColor(Color.white);
-		//g2.fillRect(x, y, gp.tileSize, gp.tileSize); // desenhando um retangulo
-		
 		BufferedImage image = look;
 		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+	}
+	
+	private void alteraMatrizBaixo() {
+		try {
+			gp.mutex.acquire();
+			if(x % 48 == 0 && x / 48 > 0 && x < gp.screenWidth) {
+				gp.PrintMatriz();
+				gp.matriz[y / 48][(x / 48) - 1] = 0;
+				gp.matriz[y / 48][x / 48] = 3;
+			}
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			gp.mutex.release();
+		}
+	}
+	
+	private void alteraMatrizAlto() {
+		try {
+			gp.mutex.acquire();
+			if(x % 48 == 0 && x / 48 < 19 && x > 0) {
+				gp.PrintMatriz();
+				gp.matriz[y / 48][(x / 48) + 1] = 0;
+				gp.matriz[y / 48][x / 48] = 3;
+			}
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			gp.mutex.release();
+		}
+	}
+	
+	private void inicializaMatriz() {
+		try {
+			gp.mutex.acquire();
+			gp.matriz[y / 48][x / 48] = 3;
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			gp.mutex.release();
+		}
 	}
 
 	@Override
 	public void run() {
+		//double nextDrawTime = System.nanoTime() + gp.drawInterval; // "nanoTime()" retorna o valor atual em nanossegundos.
+		
+		inicializaMatriz();
 		while(threadCarro != null) {
-			//System.out.println("AQUI");
-			if(x > gp.screenWidth) {
-				this.setDefaultValues();
-			}
+			if(this.direction == 1)
+				this.alteraMatrizAlto();
+			else
+				this.alteraMatrizBaixo();
+			
+			//nextDrawTime = gp.pausarThread(nextDrawTime);
 		}
 	}
 }
