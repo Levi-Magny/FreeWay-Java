@@ -101,11 +101,13 @@ public class Carro extends Entity implements Runnable{
 	private void alteraMatrizBaixo() {
 		try {
 			gp.mutex.acquire();
-			if(x % 48 == 0 && x / 48 > 0 && x < gp.screenWidth) {
+			if(x % 48 == 0 && x < gp.screenWidth) {
 				gp.PrintMatriz();
-				gp.matriz[y / 48][(x / 48) - 1] = 0;
+				if(x / 48 > 0)
+					gp.matriz[y / 48][(x / 48) - 1] = 0;
 				gp.matriz[y / 48][x / 48] = 3;
 			}
+			//System.out.println(gp.matriz[y/48][0] == 3);
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		} finally {
@@ -116,10 +118,10 @@ public class Carro extends Entity implements Runnable{
 	private void alteraMatrizAlto() {
 		try {
 			gp.mutex.acquire();
-			if(x % 48 == 0 && x / 48 < 19 && x > 0) {
-				gp.PrintMatriz();
+			if(x % 48 == 0 && x / 48 < 19) {
 				gp.matriz[y / 48][(x / 48) + 1] = 0;
 				gp.matriz[y / 48][x / 48] = 3;
+				//gp.PrintMatriz();
 			}
 		} catch(InterruptedException e) {
 			e.printStackTrace();

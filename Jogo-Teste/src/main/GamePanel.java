@@ -40,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
  	Player player2;
  	// public ControlStreets controleRuas;
  	Carro carro1;
- 	Carro carro2;
+ 	/*Carro carro2;
  	Carro carro3;
  	Carro carro4;
  	Carro carro5;
@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
  	Carro carro7;
  	Carro carro8;
  	Carro carro9;
- 	Carro carro10;
+ 	Carro carro10;*/
 	
 	
 	public GamePanel() {
@@ -65,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
 		player1 = new Player(this, keyH_ws, 200, 570);
 		player2 = new Player(this, keyH_arrow, 700, 570);
 		carro1 = new Carro(this, 0, 0);
-		carro2 = new Carro(this, 1, 0);
+		/*carro2 = new Carro(this, 1, 0);
 		carro3 = new Carro(this, 2, 0);
 		carro4 = new Carro(this, 3, 0);
 		carro5 = new Carro(this, 4, 0);
@@ -73,7 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
 		carro7 = new Carro(this, 1, 1);
 		carro8 = new Carro(this, 2, 1);
 		carro9 = new Carro(this, 3, 1);
-		carro10 = new Carro(this, 4, 1);
+		carro10 = new Carro(this, 4, 1);*/
 	}
 	
 	public void IniciaMatriz() {
@@ -98,7 +98,7 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		carro1.startThread();
-		carro2.startThread();
+		/*carro2.startThread();
 		carro3.startThread();
 		carro4.startThread();
 		carro5.startThread();
@@ -106,7 +106,7 @@ public class GamePanel extends JPanel implements Runnable {
 		carro7.startThread();
 		carro8.startThread();
 		carro9.startThread();
-		carro10.startThread();
+		carro10.startThread();*/
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class GamePanel extends JPanel implements Runnable {
 		player1.update();
 		player2.update();
 		carro1.update();
-		carro2.update();
+		/*carro2.update();
 		carro3.update();
 		carro4.update();
 		carro5.update();
@@ -158,7 +158,7 @@ public class GamePanel extends JPanel implements Runnable {
 		carro7.update();
 		carro8.update();
 		carro9.update();
-		carro10.update();
+		carro10.update();*/
 	}
 	
 	public void paintComponent(Graphics g) { // graphics é uma classe que implementa varias formas de desenhar objetos na tela.
@@ -170,7 +170,7 @@ public class GamePanel extends JPanel implements Runnable {
 		player1.draw(g2);
 		player2.draw(g2);
 		carro1.draw(g2);
-		carro2.draw(g2);
+		/*carro2.draw(g2);
 		carro3.draw(g2);
 		carro4.draw(g2);
 		carro5.draw(g2);
@@ -178,7 +178,7 @@ public class GamePanel extends JPanel implements Runnable {
 		carro7.draw(g2);
 		carro8.draw(g2);
 		carro9.draw(g2);
-		carro10.draw(g2);
+		carro10.draw(g2);*/
 		
 		g2.dispose(); // descarta este contexto gráfico e libera quisquer recursos do sistema que estao usando ele.
 		
