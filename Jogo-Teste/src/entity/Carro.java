@@ -89,8 +89,10 @@ public class Carro extends Entity implements Runnable{
 	
 	public void update() {
 		int newPos = (direction == 0) ? x + speed : x - speed;
-		
 		x = newPos;
+		if(x > gp.screenWidth) {
+			setDefaultValues();
+		}
 	}
 	
 	public void draw(Graphics2D g2) {
@@ -104,10 +106,7 @@ public class Carro extends Entity implements Runnable{
 	@Override
 	public void run() {
 		while(threadCarro != null) {
-			//System.out.println("AQUI");
-			if(x > gp.screenWidth) {
-				this.setDefaultValues();
-			}
+			
 		}
 	}
 }

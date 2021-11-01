@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable{
 	Thread gameThread;
 	Player player1 = new Player(this, keyH_ws, 200, 570);
  	Player player2 = new Player(this, keyH_arrow, 700, 570);
- 	Carro carro = new Carro(this, 1, 0);
+ 	Carro carro = new Carro(this, 3, 0);
 	
 	
 	public GamePanel() {
