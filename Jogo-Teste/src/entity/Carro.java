@@ -102,7 +102,7 @@ public class Carro extends Entity implements Runnable{
 		try {
 			gp.mutex.acquire();
 			if(x % 48 == 0 && x < gp.screenWidth) {
-				gp.PrintMatriz();
+				//gp.PrintMatriz();
 				if(x / 48 > 0)
 					gp.matriz[y / 48][(x / 48) - 1] = 0;
 				gp.matriz[y / 48][x / 48] = 3;

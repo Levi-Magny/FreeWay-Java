@@ -62,8 +62,8 @@ public class GamePanel extends JPanel implements Runnable {
 		mutex = new Semaphore(1, true);
 		matriz = new int[14][20];
 		IniciaMatriz();
-		player1 = new Player(this, keyH_ws, 200, 570);
-		player2 = new Player(this, keyH_arrow, 700, 570);
+		player1 = new Player(this, keyH_ws, 192, 576, 1);
+		player2 = new Player(this, keyH_arrow, 720, 576, 2);
 		carro1 = new Carro(this, 0, 0);
 		/*carro2 = new Carro(this, 1, 0);
 		carro3 = new Carro(this, 2, 0);
@@ -97,6 +97,8 @@ public class GamePanel extends JPanel implements Runnable {
 	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start();
+		player1.startThread();
+		player2.startThread();
 		carro1.startThread();
 		/*carro2.startThread();
 		carro3.startThread();
