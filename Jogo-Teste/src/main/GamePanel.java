@@ -38,9 +38,10 @@ public class GamePanel extends JPanel implements Runnable {
 	public Semaphore mutex;
 	Player player1;
  	Player player2;
+ 	Ruas ruas;
  	// public ControlStreets controleRuas;
- 	Carro carro1;
- 	/*Carro carro2;
+ 	/*Carro carro1;
+ 	Carro carro2;
  	Carro carro3;
  	Carro carro4;
  	Carro carro5;
@@ -64,8 +65,9 @@ public class GamePanel extends JPanel implements Runnable {
 		IniciaMatriz();
 		player1 = new Player(this, keyH_ws, 192, 576, 1);
 		player2 = new Player(this, keyH_arrow, 720, 576, 2);
-		carro1 = new Carro(this, 0, 0);
-		/*carro2 = new Carro(this, 1, 0);
+		ruas = new Ruas(this);
+		/*carro1 = new Carro(this, 0, 0);
+		carro2 = new Carro(this, 1, 0);
 		carro3 = new Carro(this, 2, 0);
 		carro4 = new Carro(this, 3, 0);
 		carro5 = new Carro(this, 4, 0);
@@ -99,8 +101,9 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread.start();
 		player1.startThread();
 		player2.startThread();
-		carro1.startThread();
-		/*carro2.startThread();
+		ruas.iniciaThreadsDosCarros();
+		/*carro1.startThread();
+		carro2.startThread();
 		carro3.startThread();
 		carro4.startThread();
 		carro5.startThread();
@@ -151,8 +154,9 @@ public class GamePanel extends JPanel implements Runnable {
 	public void update() {
 		player1.update();
 		player2.update();
-		carro1.update();
-		/*carro2.update();
+		ruas.updateCarros();
+		/*carro1.update();
+		carro2.update();
 		carro3.update();
 		carro4.update();
 		carro5.update();
@@ -171,8 +175,9 @@ public class GamePanel extends JPanel implements Runnable {
 		tileM.draw(g2);
 		player1.draw(g2);
 		player2.draw(g2);
-		carro1.draw(g2);
-		/*carro2.draw(g2);
+		ruas.paintComponentCarros(g2);
+		/*carro1.draw(g2);
+		carro2.draw(g2);
 		carro3.draw(g2);
 		carro4.draw(g2);
 		carro5.draw(g2);
