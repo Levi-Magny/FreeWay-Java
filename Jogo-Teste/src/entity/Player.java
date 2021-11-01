@@ -10,22 +10,34 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 
-public class Player extends Entity{
+public class Player extends Entity implements Runnable {
 	GamePanel gp;
 	KeyHandler keyH;
+	Thread threadPlayer;
+	int defaultX, defaultY;
 	
-	public Player(GamePanel gp, KeyHandler keyH, int x, int y) {
+	int idPlayer;
+	int yAntigo; // Gambiarra talvez ???
+	
+	public Player(GamePanel gp, KeyHandler keyH, int x, int y, int idPlayer) {
 		this.gp = gp;
 		this.keyH = keyH;
+		this.idPlayer = idPlayer;
 		
 		setDefaultValues(x, y);
 		getPlayerImage();
 	}
 	
+	public void startThread() {
+	    threadPlayer = new Thread(this);
+	    threadPlayer.start();
+	}
+	
 	public void setDefaultValues(int X, int Y) {
-		x = X;
-		y = Y;
-		speed = 4;
+		x = defaultX = X;
+		y = defaultY = Y;
+		speed = 3;
+		yAntigo = y;
 	}
 	
 	public void getPlayerImage() {
@@ -38,7 +50,7 @@ public class Player extends Entity{
 		}
 	}
 	
-	public void update() {
+	public void update() { // Talvez colocar mais uma condição aqui para update na tela quando atingir o outro lado da rodovia
 		if(keyH.upPressed == true) {
 			y -= speed;
 		}
@@ -53,5 +65,67 @@ public class Player extends Entity{
 		BufferedImage image = look;
 		
 		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+	}
+	
+	/**
+	 * quando o Player e criado, ele chama este metodo para setar seus valores na matriz de controle.
+	 */
+	private void inicializaPosicaoMatriz() {
+		try {
+			gp.mutex.acquire();
+			gp.matriz[y / 48][x / 48] = idPlayer;
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			gp.mutex.release();
+		}
+	}
+	
+	/**
+	 * Este metodo atualiza a matriz de controle do jogo, implementando um mutex para tratar acesso a
+	 * regiao critica.
+	 */
+	private void atualizaMatriz() { // Juntamente com atualizar na matriz o retorno ao inicio ao atingir o outro lado da rodovia
+		try {
+			gp.mutex.acquire();
+			if(y % 48 == 0) {
+				gp.matriz[yAntigo / 48][x / 48] = 0;
+				if(gp.matriz[y / 48][x / 48] == 0) {
+					gp.matriz[y / 48][x / 48] = idPlayer;
+				} else {
+					gp.colision = idPlayer;
+				}
+				yAntigo = y;
+//				gp.PrintMatriz();
+			}
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			gp.mutex.release();
+		}
+	}
+
+	@Override
+	public void run() {
+
+		inicializaPosicaoMatriz();
+		while(threadPlayer != null) {
+			
+			atualizaMatriz();
+			
+		}
+		
+	}
+	
+	/**
+	 * Quando há colisao, este metodo reseta as posicoes do player.
+	 */
+	public void resetPosition() {
+		if(gp.matriz[y / 48][x / 48] == idPlayer) {
+			gp.matriz[y / 48][x / 48] = 0;			
+		}
+		x = defaultX;
+		y = defaultY;
+		gp.matriz[defaultY / 48][defaultX / 48] = idPlayer;
 	}
 }
