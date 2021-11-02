@@ -108,7 +108,7 @@ public class Carro extends Entity implements Runnable{
 					gp.cc.colision = gp.cc.matriz[y / 48][x / 48];
 				}
 				gp.cc.matriz[y / 48][x / 48] = 3;
-				gp.cc.PrintMatriz();
+				//gp.cc.PrintMatriz();
 			}
 			//System.out.println(gp.matriz[y/48][0] == 3);
 		} catch(InterruptedException e) {
@@ -127,7 +127,7 @@ public class Carro extends Entity implements Runnable{
 					gp.cc.colision = gp.cc.matriz[y / 48][x / 48];
 				}
 				gp.cc.matriz[y / 48][x / 48] = 3;
-				gp.cc.PrintMatriz();
+				//gp.cc.PrintMatriz();
 			}
 		} catch(InterruptedException e) {
 			e.printStackTrace();

@@ -51,12 +51,13 @@ public class Player extends Entity implements Runnable {
 	}
 	
 	public void update() { // Talvez colocar mais uma condição aqui para update na tela quando atingir o outro lado da rodovia
-		if(keyH.upPressed == true) {
+		//System.out.println("y: " + y);
+		
+		if(keyH.upPressed == true)
 			y -= speed;
-		}
-		else if(keyH.downPressed == true) {
-			y += speed;
-		}
+		else if(keyH.downPressed == true)
+			y += y == 576 ? 0 : speed;
+		
 	}
 	public void draw(Graphics2D g2) {
 		//g2.setColor(Color.white);
@@ -86,22 +87,29 @@ public class Player extends Entity implements Runnable {
 	 * regiao critica.
 	 */
 	private void atualizaMatriz() { // Juntamente com atualizar na matriz o retorno ao inicio ao atingir o outro lado da rodovia
-		try {
-			gp.mutex.acquire();
-			if(y % 48 == 0 && yAntigo != y / 48) {
-				gp.cc.matriz[yAntigo / 48][x / 48] = 0;
-				if(gp.cc.matriz[y / 48][x / 48] == 0) {
-					gp.cc.matriz[y / 48][x / 48] = idPlayer;
-					yAntigo = y;
-				} else {
-					gp.cc.colision = idPlayer;
+		if(y > 48) {
+			try {
+				gp.mutex.acquire();
+				if(y % 48 == 0 && yAntigo != y / 48) {
+					gp.cc.matriz[yAntigo / 48][x / 48] = 0;
+					if(gp.cc.matriz[y / 48][x / 48] == 0) {
+						gp.cc.matriz[y / 48][x / 48] = idPlayer;
+						yAntigo = y;
+					} else {
+						gp.cc.colision = idPlayer;
+					}
+					//gp.cc.PrintMatriz();
 				}
-				//gp.cc.PrintMatriz();
-			}
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			gp.mutex.release();
+			} catch(InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				gp.mutex.release();
+			}			
+		} else {
+			inicializaPosicaoMatriz();
+			x = defaultX;
+			y = defaultY;
+			yAntigo = y;
 		}
 	}
 
