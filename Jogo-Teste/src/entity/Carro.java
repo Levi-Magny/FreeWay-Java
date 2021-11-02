@@ -101,15 +101,14 @@ public class Carro extends Entity implements Runnable{
 		try {
 			gp.mutex.acquire();
 			if(x % 48 == 0 && x < gp.screenWidth) {
-				//gp.PrintMatriz();
 				if(x / 48 > 0)
-					gp.matriz[y / 48][(x / 48) - 1] = 0;
+					gp.cc.matriz[y / 48][(x / 48) - 1] = 0;
 				
-				if(gp.matriz[y / 48][x / 48] != 0) {
-					gp.colision = gp.matriz[y / 48][x / 48];
+				if(gp.cc.matriz[y / 48][x / 48] != 0) {
+					gp.cc.colision = gp.cc.matriz[y / 48][x / 48];
 				}
-				threadCarro.sleep(1);
-				gp.matriz[y / 48][x / 48] = 3;
+				gp.cc.matriz[y / 48][x / 48] = 3;
+				gp.cc.PrintMatriz();
 			}
 			//System.out.println(gp.matriz[y/48][0] == 3);
 		} catch(InterruptedException e) {
@@ -123,12 +122,12 @@ public class Carro extends Entity implements Runnable{
 		try {
 			gp.mutex.acquire();
 			if(x % 48 == 0 && x / 48 < 19) {
-				gp.matriz[y / 48][(x / 48) + 1] = 0;
-				if(gp.matriz[y / 48][x / 48] != 0) {
-					gp.colision = gp.matriz[y / 48][x / 48];
+				gp.cc.matriz[y / 48][(x / 48) + 1] = 0;
+				if(gp.cc.matriz[y / 48][x / 48] != 0) {
+					gp.cc.colision = gp.cc.matriz[y / 48][x / 48];
 				}
-				gp.matriz[y / 48][x / 48] = 3;
-				//gp.PrintMatriz();
+				gp.cc.matriz[y / 48][x / 48] = 3;
+				gp.cc.PrintMatriz();
 			}
 		} catch(InterruptedException e) {
 			e.printStackTrace();
@@ -140,7 +139,7 @@ public class Carro extends Entity implements Runnable{
 	private void inicializaMatriz() {
 		try {
 			gp.mutex.acquire();
-			gp.matriz[y / 48][x / 48] = 3;
+			gp.cc.matriz[y / 48][x / 48] = 3;
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		} finally {

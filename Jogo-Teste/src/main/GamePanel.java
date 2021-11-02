@@ -28,20 +28,17 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int FPS = 80;
 	public final double drawInterval = 1000000000/FPS; // 0.01666 segundos
 	
-	public int matriz[][];
-	public int colision = 0;
-	
-	
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH_arrow = new KeyHandler(true);
 	KeyHandler keyH_ws = new KeyHandler(false);
 	Thread gameThread;
 	
 	public Semaphore mutex;
+	public ControleColisao cc;
 	Player player1;
  	Player player2;
  	Ruas ruas;
- 	// public ControlStreets controleRuas;
+ 
  	/*Carro carro1;
  	Carro carro2;
  	Carro carro3;
@@ -62,12 +59,12 @@ public class GamePanel extends JPanel implements Runnable {
 		this.addKeyListener(keyH_ws);
 		this.setFocusable(true); // com isso o painel do jogo vai estar focado para receber inputs de teclado a
 
+		cc = new ControleColisao(this);
 		mutex = new Semaphore(1, true);
-		matriz = new int[14][20];
-		IniciaMatriz();
 		player1 = new Player(this, keyH_ws, 192, 576, 1);
 		player2 = new Player(this, keyH_arrow, 720, 576, 2);
 		ruas = new Ruas(this);
+		
 		/*carro1 = new Carro(this, 0, 0);
 		carro2 = new Carro(this, 1, 0);
 		carro3 = new Carro(this, 2, 0);
@@ -80,30 +77,14 @@ public class GamePanel extends JPanel implements Runnable {
 		carro10 = new Carro(this, 4, 1);*/
 	}
 	
-	public void IniciaMatriz() {
-		for (int i = 0; i < 14; i++) {
-			for (int j = 0; j < 20; j++) {
-				matriz[i][j] = 0;
-			}
-		}
-	}
-	
-	public void PrintMatriz() {
-		for (int i = 0; i < 14; i++) {
-			for (int j = 0; j < 20; j++) {
-				System.out.print(matriz[i][j]);
-			}
-			System.out.println();
-		}
-		System.out.println("-------------------");
-	}
-	
 	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start();
 		player1.startThread();
 		player2.startThread();
+		cc.startThread();
 		ruas.iniciaThreadsDosCarros();
+		
 		/*carro1.startThread();
 		carro2.startThread();
 		carro3.startThread();
@@ -128,28 +109,9 @@ public class GamePanel extends JPanel implements Runnable {
 			// 2 DRAW: Desenhar a tela com as informacoes atualizadas.
 			repaint();
 			
-			checkColision();
-			
 			nextDrawTime = pausarThread(nextDrawTime);
 		}
 		
-	}
-	
-	public void checkColision() {
-		// Já implentei o mutex aqui, entao teoricamente nao preciso implementar dentro do resetPosition();
-		try {
-			mutex.acquire();
-			if(colision == 1) {
-				player1.resetPosition();
-			} else if (colision == 2) {
-				player2.resetPosition();
-			}
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			colision = 0;
-			mutex.release();
-		}
 	}
 	
 	public double pausarThread(double nextDrawTime) {
@@ -176,6 +138,7 @@ public class GamePanel extends JPanel implements Runnable {
 		player1.update();
 		player2.update();
 		ruas.updateCarros();
+		
 		/*carro1.update();
 		carro2.update();
 		carro3.update();
@@ -197,6 +160,7 @@ public class GamePanel extends JPanel implements Runnable {
 		player1.draw(g2);
 		player2.draw(g2);
 		ruas.paintComponentCarros(g2);
+		
 		/*carro1.draw(g2);
 		carro2.draw(g2);
 		carro3.draw(g2);
