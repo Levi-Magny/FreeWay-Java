@@ -96,7 +96,7 @@ public class Player extends Entity implements Runnable {
 					gp.colision = idPlayer;
 				}
 				yAntigo = y;
-//				gp.PrintMatriz();
+				gp.PrintMatriz();
 			}
 		} catch(InterruptedException e) {
 			e.printStackTrace();

@@ -43,7 +43,7 @@ public class Carro extends Entity implements Runnable{
 	}
 	
 	public void setSpeed() {
-		int Speeds[] = {1, 2, 4, 6, 8};
+		int Speeds[] = {1, 2, 3, 4, 6};
 		
 		speed = Speeds[RelPosition];
 	}
@@ -108,7 +108,6 @@ public class Carro extends Entity implements Runnable{
 				if(gp.matriz[y / 48][x / 48] != 0) {
 					gp.colision = gp.matriz[y / 48][x / 48];
 				}
-				threadCarro.sleep(1);
 				gp.matriz[y / 48][x / 48] = 3;
 			}
 			//System.out.println(gp.matriz[y/48][0] == 3);

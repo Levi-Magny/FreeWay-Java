@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int screenHeight = tileSize*maxScreenRow; // 672 pixels
 
 	// FPS
-	public final int FPS = 80;
+	public final int FPS = 90;
 	public final double drawInterval = 1000000000/FPS; // 0.01666 segundos
 	
 	public int matriz[][];
