@@ -26,6 +26,9 @@ public class TileManager {
 		loadMap();
 	}
 	
+	/**
+	 * Ler o arquivo txt e monta o mapa
+	 */
 	public void loadMap() {
 		
 		try {
@@ -59,6 +62,9 @@ public class TileManager {
 		}
 	}
 	
+	/**
+	 * Busca as imagens para montar o mapa
+	 */
 	public void geTileImage() {
 		
 		try {
@@ -79,6 +85,10 @@ public class TileManager {
 		}
 	}
 	
+	/**
+	 * Desenha o mapa completo
+	 * @param g2
+	 */
 	public void draw(Graphics2D g2) {
 		
 		int col = 0;

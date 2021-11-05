@@ -42,16 +42,25 @@ public class Carro extends Entity implements Runnable{
 		threadCarro.start();
 	}
 	
+	/**
+	 * configura a velocidade do carro dependendo da rua em que esta
+	 */
 	public void setSpeed() {
 		int Speeds[] = {1, 2, 3, 4, 6};
 		
 		speed = Speeds[RelPosition];
 	}
 	
+	/**
+	 * Seta a posicao absoluta em y que o carro esta
+	 */
 	public void setAbsPos() {
 		AbsPosition = (direction == 0) ? (9-RelPosition) : RelPosition;
 	}
 	
+	/**
+	 * Seta os valores iniciais do carro
+	 */
 	public void setDefaultValues() {
 		if(direction == 0)
 			x = 0;
@@ -61,6 +70,9 @@ public class Carro extends Entity implements Runnable{
 		y = (AbsPosition+2)*48;
 	}
 	
+	/**
+	 * Define qual sera a aparencia do carro (cor e direcao)
+	 */
 	public void getPlayerImage() {
 		
 		String colors[] = {"Carro01.png", "Carro02.png"};
@@ -83,6 +95,9 @@ public class Carro extends Entity implements Runnable{
 		}
 	}
 	
+	/**
+	 * Atualiza a posicao do carro na tela
+	 */
 	public void update() {
 		int newPos = (direction == 0) ? x + speed : x - speed;
 		x = newPos;
@@ -92,23 +107,33 @@ public class Carro extends Entity implements Runnable{
 		}
 	}
 	
+	/**
+	 * Redesenha o carro na tela
+	 * @param g2
+	 */
 	public void draw(Graphics2D g2) {
 		BufferedImage image = look;
 		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
 	}
 	
+	/**
+	 * Implementa a logica da colisao para os carros que estao no lado de BAIXO do jogo
+	 */
 	private void alteraMatrizBaixo() {
 		try {
 			gp.mutex.acquire();
 			if(x % 48 == 0 && x < gp.screenWidth) {
-				//gp.PrintMatriz();
 				if(x / 48 > 0)
-					gp.matriz[y / 48][(x / 48) - 1] = 0;
+					gp.cc.matriz[y / 48][(x / 48) - 1] = 0;
 				
-				if(gp.matriz[y / 48][x / 48] != 0) {
-					gp.colision = gp.matriz[y / 48][x / 48];
+				if(gp.cc.matriz[y / 48][x / 48] != 0) {
+					if(gp.cc.matriz[y / 48][x / 48] == 1)
+						gp.cc.colision1 = true;
+					else if(gp.cc.matriz[y / 48][x / 48] == 2)
+						gp.cc.colision2 = true;
 				}
-				gp.matriz[y / 48][x / 48] = 3;
+				gp.cc.matriz[y / 48][x / 48] = 3;
+				//gp.cc.PrintMatriz();
 			}
 			//System.out.println(gp.matriz[y/48][0] == 3);
 		} catch(InterruptedException e) {
@@ -118,16 +143,22 @@ public class Carro extends Entity implements Runnable{
 		}
 	}
 	
+	/**
+	 * Implementa a logica da colisao para os carros que estao no lado de CIMA do jogo
+	 */	
 	private void alteraMatrizAlto() {
 		try {
 			gp.mutex.acquire();
 			if(x % 48 == 0 && x / 48 < 19) {
-				gp.matriz[y / 48][(x / 48) + 1] = 0;
-				if(gp.matriz[y / 48][x / 48] != 0) {
-					gp.colision = gp.matriz[y / 48][x / 48];
+				gp.cc.matriz[y / 48][(x / 48) + 1] = 0;
+				if(gp.cc.matriz[y / 48][x / 48] != 0) {
+					if(gp.cc.matriz[y / 48][x / 48] == 1)
+						gp.cc.colision1 = true;
+					else if(gp.cc.matriz[y / 48][x / 48] == 2)
+						gp.cc.colision2 = true;
 				}
-				gp.matriz[y / 48][x / 48] = 3;
-				//gp.PrintMatriz();
+				gp.cc.matriz[y / 48][x / 48] = 3;
+				//gp.cc.PrintMatriz();
 			}
 		} catch(InterruptedException e) {
 			e.printStackTrace();
@@ -136,10 +167,13 @@ public class Carro extends Entity implements Runnable{
 		}
 	}
 	
+	/**
+	 * Seta a posicao inicial do carro na matriz de colisao
+	 */
 	private void inicializaMatriz() {
 		try {
 			gp.mutex.acquire();
-			gp.matriz[y / 48][x / 48] = 3;
+			gp.cc.matriz[y / 48][x / 48] = 3;
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		} finally {

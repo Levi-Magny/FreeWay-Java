@@ -33,6 +33,11 @@ public class Player extends Entity implements Runnable {
 	    threadPlayer.start();
 	}
 	
+	/**
+	 * Seta as posicioes iniciais do jogador na tela
+	 * @param X
+	 * @param Y
+	 */
 	public void setDefaultValues(int X, int Y) {
 		x = defaultX = X;
 		y = defaultY = Y;
@@ -40,6 +45,9 @@ public class Player extends Entity implements Runnable {
 		yAntigo = y;
 	}
 	
+	/**
+	 * Pega a imagem da galinha
+	 */
 	public void getPlayerImage() {
 		try {
 			
@@ -51,16 +59,19 @@ public class Player extends Entity implements Runnable {
 	}
 	
 	public void update() { // Talvez colocar mais uma condição aqui para update na tela quando atingir o outro lado da rodovia
-		if(keyH.upPressed == true) {
+		//System.out.println("y: " + y);
+		
+		if(keyH.upPressed == true)
 			y -= speed;
-		}
-		else if(keyH.downPressed == true) {
-			y += speed;
-		}
+		else if(keyH.downPressed == true)
+			y += y == 576 ? 0 : speed;
+		
 	}
+	/**
+	 * Desenha a galinha na tela
+	 * @param g2
+	 */
 	public void draw(Graphics2D g2) {
-		//g2.setColor(Color.white);
-		//g2.fillRect(x, y, gp.tileSize, gp.tileSize); // desenhando um retangulo
 		
 		BufferedImage image = look;
 		
@@ -73,7 +84,7 @@ public class Player extends Entity implements Runnable {
 	private void inicializaPosicaoMatriz() {
 		try {
 			gp.mutex.acquire();
-			gp.matriz[y / 48][x / 48] = idPlayer;
+			gp.cc.matriz[y / 48][x / 48] = idPlayer;
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		} finally {
@@ -86,18 +97,30 @@ public class Player extends Entity implements Runnable {
 	 * regiao critica.
 	 */
 	private void atualizaMatriz() { // Juntamente com atualizar na matriz o retorno ao inicio ao atingir o outro lado da rodovia
+		if(y <= 48) {
+			inicializaPosicaoMatriz();
+			x = defaultX;
+			y = defaultY;
+			yAntigo = y;
+			gp.score.update(idPlayer);
+			return;
+		}
 		try {
 			gp.mutex.acquire();
-			if(y % 48 == 0) {
-				gp.matriz[yAntigo / 48][x / 48] = 0;
-				if(gp.matriz[y / 48][x / 48] == 0) {
-					gp.matriz[y / 48][x / 48] = idPlayer;
+			if(y % 48 == 0 && yAntigo != y / 48) {
+				gp.cc.matriz[yAntigo / 48][x / 48] = 0;
+				if(gp.cc.matriz[y / 48][x / 48] == 0) {
+					gp.cc.matriz[y / 48][x / 48] = idPlayer;
+					yAntigo = y;
 				} else {
-					gp.colision = idPlayer;
+					if(idPlayer == 1)
+						gp.cc.colision1 = true;
+					else
+						gp.cc.colision2 = true;
 				}
-				yAntigo = y;
-				gp.PrintMatriz();
+				//gp.cc.PrintMatriz();
 			}
+
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		} finally {
@@ -105,6 +128,20 @@ public class Player extends Entity implements Runnable {
 		}
 	}
 
+	/**
+	 * Quando há colisao, este metodo reseta as posicoes do player.
+	 */
+	public void resetPosition() {
+		
+		if(gp.cc.matriz[y / 48][x / 48] == idPlayer) {
+			gp.cc.matriz[y / 48][x / 48] = 0;			
+		}
+		x = defaultX;
+		y = defaultY;
+		yAntigo = y;
+		gp.cc.matriz[defaultY / 48][defaultX / 48] = idPlayer;
+	}
+	
 	@Override
 	public void run() {
 
@@ -114,18 +151,5 @@ public class Player extends Entity implements Runnable {
 			atualizaMatriz();
 			
 		}
-		
-	}
-	
-	/**
-	 * Quando há colisao, este metodo reseta as posicoes do player.
-	 */
-	public void resetPosition() {
-		if(gp.matriz[y / 48][x / 48] == idPlayer) {
-			gp.matriz[y / 48][x / 48] = 0;			
-		}
-		x = defaultX;
-		y = defaultY;
-		gp.matriz[defaultY / 48][defaultX / 48] = idPlayer;
 	}
 }

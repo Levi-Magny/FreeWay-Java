@@ -27,6 +27,7 @@ public class Ruas {
 		for(int i = 0; i < 10; i++)
 			carros_ruas[i].update();
 	}
+	
 	public void paintComponentCarros(Graphics2D g2) {
 		for(int i = 0; i < 10; i++)
 			carros_ruas[i].draw(g2);
