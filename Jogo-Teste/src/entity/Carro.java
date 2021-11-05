@@ -122,7 +122,7 @@ public class Carro extends Entity implements Runnable{
 	private void alteraMatrizBaixo() {
 		try {
 			gp.mutex.acquire();
-			if(x % 48 == 0 && x < gp.screenWidth) {
+			if(x < gp.screenWidth) {
 				if(x / 48 > 0)
 					gp.cc.matriz[y / 48][(x / 48) - 1] = 0;
 				
@@ -149,7 +149,7 @@ public class Carro extends Entity implements Runnable{
 	private void alteraMatrizAlto() {
 		try {
 			gp.mutex.acquire();
-			if(x % 48 == 0 && x / 48 < 19) {
+			if(x / 48 < 19) {
 				gp.cc.matriz[y / 48][(x / 48) + 1] = 0;
 				if(gp.cc.matriz[y / 48][x / 48] != 0) {
 					if(gp.cc.matriz[y / 48][x / 48] == 1)
